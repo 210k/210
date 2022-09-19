@@ -49,9 +49,9 @@
  }
  #outputPassword {
      background-color: #f7df5f;
-font-size: 25px;
-font-weight: bold;
-color:#000;
+	font-size: 25px;
+	font-weight: bold;
+	color:#000;
  }
  .tt-dropdown-menu {
      background-color: #ECF0F1;
@@ -272,16 +272,16 @@ $(document).ready(function () {
 
         if (!User) {
             $user.css('background-color', '#f4cccc');
-            $info.html("Please enter a user name").show().delay(5000).fadeOut('slow');
+            $info.html("Please enter a user name").show().delay(2000).fadeOut('slow');
         } else if (!Domain) {
             $domain.css('background-color', '#f4cccc');
-            $info.html("Please enter a valid website/app name (e.g., google)").show().delay(5000).fadeOut('slow');
+            $info.html("Please enter a valid website or app name (e.g., google)").show().delay(2000).fadeOut('slow');
         } else if ((!Len) || (isNaN(Len / 1) == true)) {
             $length.css('background-color', '#f4cccc');
-            $info.html("Please enter a valid numerical length for your password").show().delay(5000).fadeOut('slow');
+            $info.html("Please enter a valid numerical length for your password").show().delay(2000).fadeOut('slow');
         } else if (!Phrase) {
             $phrase.css('background-color', '#f4cccc');
-            $info.html("Please enter your master password").show().delay(5000).fadeOut('slow');
+            $info.html("Please enter your master password").show().delay(2000).fadeOut('slow');
         } else {
             var hostPattern = /^([a-zA-Z0-9-]+)$/;
             if (hostPattern.test(Domain) == false) {
@@ -315,7 +315,7 @@ $(document).ready(function () {
 
     $("input.typeahead").typeahead({
         name: "domain",
-        local: ["bmo", "cibc", "simplii", "triangle", "facebook", "google", "tangerine", "paypal", "pcfinancial", "mbna", "rbc", "yahoo", "amazon", "apple", "besbuy", "canadalife", "manulife", "canadapost", "canadiantire", "scotiabank", "costco", "dell", "discord", "disneyplus", "dropbox", "ebay", "kijiji", "etsy", "github", "homedepot", "manitobahydro", "ifttt", "imgur", "indeed", "instagram", "mint", "jwpub", "linkedin", "microsoft", "netflix", "nordvpn", "princessauto", "reddit", "shaw", "textnow", "twitter", "udemy" "wealthsimple", "questrade", "wyze", "wsd1", "zoom" ]
+       local: ["bmo", "cibc", "simplii", "triangle", "facebook", "google", "tangerine", "paypal", "pcfinancial", "mbna", "rbc", "yahoo", "apple", "scotiabank", "discord", "mint", "jwpub", "microsoft", "reddit", "wealthsimple", "questrade", "wsd1"]
     });
 });
 
