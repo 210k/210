@@ -16,7 +16,7 @@
  }
  body {
      font-family: Consolas, monaco, monospace;
-     background-color: 	#96ceb4;
+     background-color:  #0e0e0e;
      padding: 50px;
  }
  .login {
@@ -24,9 +24,10 @@
      width: 300px;
  }
  .login-screen {
-     background-color: #FFF;
+     background-color:#242424;
      padding: 20px;
      border-radius: 5px
+
  }
  .app-title {
      text-align: center;
@@ -59,25 +60,27 @@
  }
  input {
      text-align: center;
-     background-color: #ffeead;
+color: #728f78;
+     background-color: #0e0e0e;
      border: 2px solid transparent;
      border-radius: 3px;
      font-family: Consolas, monaco, monospace;	 
-     font-size: 16px;
+     font-size: 14px;
      font-weight: 200;
      padding: 10px 0;
      width: 250px;
      transition: border .5s;
  }
  input:focus {
-     border: 2px solid #ffcc5c;
+     border: 2px solid #0e0e0e;
      box-shadow: none;
  }
  .btn {
      border: 2px solid transparent;
-     background: #ff6f69;
-     color: #ffffff;
-     font-size: 16px;
+     background: #50875b;
+     color: #000;
+     font-size: 22px;
+font-family: Trebuchet MS, sans-serif;
      line-height: 25px;
      padding: 10px 0;
      text-decoration: none;
@@ -88,13 +91,14 @@
      display: block;
      width: 250px;
      margin: 0 auto;
+font-weight: bold;
  }
  
  .btn2 {
      border: 2px solid transparent;
-     background: #cc6882;
-     color: #ffffff;
-     font-size: 16px;
+     background: #0e0e0e;
+     color: #fd4646;
+     font-size: 22px;
      line-height: 25px;
      padding: 10px 0;
      text-decoration: none;
@@ -105,14 +109,17 @@
      display: block;
      width: 250px;
      margin: 0 auto;
+font-family: Trebuchet MS, sans-serif;
+
  }
  
  .btn:hover {
-     background-color: #ffcc5c;
+     background-color: #30ac49;
  }
  
  .btn2:hover {
-     background-color: #ff6f69;
+     background-color: #fd4646;
+color: #0e0e0e;
  }
  .help {
      padding: 10px 0;
@@ -166,7 +173,7 @@
                 </div>
 
                 <div class="control-group">
-                    <span class="twitter-typeahead" style="position: relative; display: inline-block;"><input class="tt-hint" type="text" autocomplete="off" spellcheck="off" disabled="" style="position: absolute; top: 0px; left: 0px; border-color: transparent; box-shadow: none; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(236, 240, 241);"><input autocorrect="off" spellcheck="false" type="text" class="login-field userInput typeahead notstored tt-query" value="" placeholder="website / app" id="inputDomain" autocomplete="off" dir="auto" style="position: relative; vertical-align: top; "><span style="position: absolute; left: -9999px; visibility: hidden; white-space: nowrap; font-family: Consolas, monaco, monospace; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 200; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: auto; text-transform: none;"></span><span class="tt-dropdown-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;"></span></span>
+                  <input autocorrect="off" spellcheck="false" type="text" class="login-field userInput typeahead notstored tt-query" value="" placeholder="website / app" id="inputDomain" autocomplete="off" dir="auto" style="position: relative; vertical-align: top; "><span style="position: absolute; left: -9999px; visibility: hidden; white-space: nowrap; font-family: Consolas, monaco, monospace; font-size: 16px; font-style: normal; font-variant: normal; font-weight: 200; word-spacing: 0px; letter-spacing: 0px; text-indent: 0px; text-rendering: auto; text-transform: none;"></span><span class="tt-dropdown-menu" style="position: absolute; top: 100%; left: 0px; z-index: 100; display: none;"></span></span>
                     <label class="login-field-icon fui-lock" for="login-pass"></label>
                 </div>
 
@@ -191,7 +198,7 @@
 				
                 </div>
 				 <div class="control-group">
-					<a class="btn2 login-link deletecache" href="/index%20-%20Copy.html#" id="showPassword">reset</a>
+					<a class="btn2 login-link deletecache" href="/index%20-%20Copy.html#" id="showPassword">reset form</a>
                    
                 </div>
 
@@ -276,7 +283,7 @@ $(document).ready(function () {
             var hostPattern = /^([a-zA-Z0-9-]+)$/;
             if (hostPattern.test(Domain) == false) {
                 $domain.css('background-color', '#FF9');
-                $info.html("Please enter a valid domain name but without using any prefixes or suffixes. For instance, enter google and not google.com or www.google.com or accounts.google.com").show().delay(2000).fadeOut('slow');
+                $info.html("Please enter a valid website or app name without using any prefixes or suffixes. For example, just type 'google' instead of 'google.com' or 'www.google.com'").show().delay(10000).fadeOut('slow');
             } else {
                 generate_password(User, Domain, Phrase, Len);
 				
@@ -291,10 +298,10 @@ $(document).ready(function () {
         var key = e.which;
         if (e.type == 'change' || key == 8 || key == 32 || (key > 45 && key < 91) || (key > 95 && key < 112) || (key > 185 && key < 223)) {
             $output.hide();
-            $phrase.css('background-color', '#ECF0F1');
-            $user.css('background-color', '#ECF0F1');
-            $domain.css('background-color', '#ECF0F1');
-            $length.css('background-color', '#ECF0F1');
+            $phrase.css('background-color', '#0e0e0e');
+            $user.css('background-color', '#0e0e0e');
+            $domain.css('background-color', '#0e0e0e');
+            $length.css('background-color', '#0e0e0e');
         }  else if (key == 13) {
             $(this).blur();
             $('#showPassword').trigger('click');
@@ -305,7 +312,7 @@ $(document).ready(function () {
 
     $("input.typeahead").typeahead({
         name: "domain",
-        local: ["bmo", "dropbox", "ebay", "evernote", "facebook", "google", "instagram", "paypal", "pcfinancial", "readability", "skype", "yahoo"]
+        local: ["bmo", "cibc", "simplii", "triangle", "facebook", "google", "tangerine", "paypal", "pcfinancial", "mbna", "skype", "yahoo"]
     });
 });
 
