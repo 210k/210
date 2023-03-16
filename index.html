@@ -124,6 +124,28 @@ font-family: Trebuchet MS, sans-serif;
      background-color: #fd4646;
 color: #0e0e0e;
  }
+.btn3 {
+     border: 2px solid transparent;
+     background: #0095ff;
+     color: #000000;
+     font-size: 18px;
+     line-height: 25px;
+     padding: 10px 0;
+     text-decoration: none;
+     text-shadow: none;
+     border-radius: 3px;
+     box-shadow: none;
+     transition: 0.25s;
+     display: block;
+     width: 200px;
+     margin: 0 auto;
+font-family: Trebuchet MS, sans-serif;
+
+ }
+.btn3:hover {
+     background-color: #ffc800;
+color: #000000;
+ }
  .help {
      padding: 10px 0;
  }
@@ -191,19 +213,23 @@ color: #0e0e0e;
                 </div>
 
                 <div class="control-group">
-                    <a class="btn btn-primary btn-large btn-block" href="/index%20-%20Copy.html#" id="showPassword">show password</a>
+                    <a class="btn btn-primary btn-large btn-block" href="#" id="showPassword">generate password</a>
 					</div>
 					
 
                 <div class="control-group">
-                    <input autocorrect="off" size="30" spellcheck="false" style="display:none" name="kalille" type="text" class="login-field" value="" placeholder="Computing" id="outputPassword">
-					
+                    <input autocorrect="off" size="30" spellcheck="false" style="display:none" name="kalille" type="text" class="login-field" value="" placeholder="Computing" id="outputPassword"></div>
+			<div class="control-group">
+                    <a class="btn3 btn-warning btn-large btn-block" href="#" id="copyPassword">copy password</a>
+							
 				
                 </div>
 				 <div class="control-group">
-					<a class="btn2 login-link deletecache" href="/index%20-%20Copy.html#" id="showPassword">reset form</a>
+					<a class="btn2 login-link deletecache" href="#" id="showPassword">reset form</a>
                    
                 </div>
+
+
 
             </div>
             
@@ -315,9 +341,44 @@ $(document).ready(function () {
 
     $("input.typeahead").typeahead({
         name: "domain",
-       local: ["bmo", "cibc", "simplii", "triangle", "facebook", "google", "tangerine", "paypal", "pcfinancial", "mbna", "rbc", "yahoo", "apple", "scotiabank", "discord", "mint", "jwpub", "microsoft", "reddit", "wealthsimple", "questrade", "wsd1"]
+       local: [""]
     });
 });
+	    
+function copyToClipboard(elem) {
+    var target = elem;
+
+    // select the content
+    var currentFocus = document.activeElement;
+
+    target.focus();
+    target.setSelectionRange(0, target.value.length);
+
+    // copy the selection
+    var succeed;
+
+    try {
+      succeed = document.execCommand("copy");
+    } catch (e) {
+      console.warn(e);
+
+      succeed = false;
+    }
+
+    // Restore original focus
+    if (currentFocus && typeof currentFocus.focus === "function") {
+      currentFocus.focus();
+    }
+
+    if (succeed) {
+      $(".copied").animate({ top: -25, opacity: 0 }, 700, function() {
+        $(this).css({ top: 0, opacity: 1 });
+      });
+    }
+
+    return succeed;
+  }
+
 
 function clean(str) {
     var sentence = str.replace(/\w\S*/g, function (txt) {
@@ -417,7 +478,13 @@ var ascii85 = function (input) {
         result.push(x.substr(0, reminder + 1));
     }
     return result.join(""); // String
-};</script>
+};
+
+$("#copyPassword, #outputPassword").on("click", function() {
+    copyToClipboard(document.getElementById("outputPassword"));
+  });
+
+</script>
 
 
 </body></html>
