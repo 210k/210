@@ -259,6 +259,24 @@
             }
         }
 
+$("#showPassword").on("click", function(e) {
+    e.preventDefault(); // Prevents the page from jumping or reloading
+
+    // ... Your existing code that reads inputs and calculates the passwords ...
+    // var password10 = ...
+    // var password12 = ...
+
+    // 1. Set the generated password values into the boxes
+    $("#outputPassword").val(password10);
+    $("#outputPassword2").val(password12);
+
+    // 2. THE FIX: Reveal the hidden boxes on the screen
+    $("#outputPassword").show();
+    $("#outputPassword2").show();
+    
+    // Optional: If you have an info block, show that too
+    $("#outputInfo").show(); 
+});
 
         /**
          * =========================================================================
