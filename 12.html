@@ -9,14 +9,19 @@
 
     
 <style>
-#copyPassword10 {
-    background: #8aceff;
+.btn.loading {
+    background: #9aa0a6;
+    color: #111;
+    cursor: wait;
+    opacity: 0.85;
+    animation: pulse 1s infinite;
 }
 
-#copyPassword12 {
-    background: #6aaed6;
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
 }
-
      * {
      box-sizing: border-box;
  }
@@ -245,7 +250,8 @@ color: #000000;
     Copied
 </div>
                 <div class="control-group">
-                    <a class="btn btn-primary btn-large btn-block" href="#" id="showPassword">generate password </a>
+
+					<a class="btn btn-primary btn-large btn-block" href="#" id="showPassword">generate password</a>
 					</div>
 					
 
@@ -349,6 +355,7 @@ $('#showPassword').on('click', function (e) {
             $domain.css('background-color', '#f4cccc');
             $info.html("Please enter a valid website or app name without using any prefixes or suffixes. For example, just type 'google' instead of 'google.com' or 'www.google.com'").show().delay(10000).fadeOut('slow');
         } else {
+			setGenerateLoading(true);
             generate_passwords(User, Domain, Phrase);
         }
     }
@@ -381,7 +388,19 @@ $output2.hide();
        local: [""]
     });
 });
-	    
+function setGenerateLoading(isLoading) {
+    var btn = $("#showPassword");
+
+    if (isLoading) {
+        btn.addClass("loading");
+        btn.text("generating...");
+        btn.css("pointer-events", "none");
+    } else {
+        btn.removeClass("loading");
+        btn.text("generate pass (10 + 12)");
+        btn.css("pointer-events", "auto");
+    }
+}	    
 function copyToClipboard(elem) {
     var target = elem;
 
@@ -469,6 +488,7 @@ function generate_passwords(User, Domain, Phrase) {
         // 10-char password derived from the exact same 12-char output
         var password10 = nhashed.substring(0, 10);
         $output.val(password10).show();
+		setGenerateLoading(false);
 
     }, function () {});
 
