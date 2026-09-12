@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#d9a7b0">
+  <title>Find Your Seat | Kalille & Jairein</title>
+  <style>
+    :root{--pink:#d9a7b0;--pink-dark:#b97986;--gray:#55565a;--bg:#f9f6f7;--white:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100svh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(145deg,#fff 0%,var(--bg) 100%);color:var(--gray);display:flex;align-items:center;justify-content:center;padding:24px}
+    main{width:min(100%,520px);text-align:center}
+    .monogram{font-family:Georgia,serif;font-size:20px;letter-spacing:.18em;color:var(--pink-dark);margin-bottom:24px}
+    h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(38px,10vw,58px);margin:0 0 8px;color:#45464a}
+    .date{font-size:14px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:42px;color:#888}
+    .card{background:rgba(255,255,255,.94);border:1px solid #eee;border-radius:24px;padding:28px 22px;box-shadow:0 12px 40px rgba(60,50,55,.08)}
+    label{display:block;text-align:left;font-size:14px;margin:0 4px 8px;font-weight:600}
+    .search-wrap{position:relative}
+    input{width:100%;font-size:18px;padding:17px 18px;border:1.5px solid #ddd;border-radius:14px;outline:none;background:#fff;color:#333}
+    input:focus{border-color:var(--pink-dark);box-shadow:0 0 0 4px rgba(217,167,176,.18)}
+    .suggestions{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1px solid #eee;border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.10);overflow:hidden;text-align:left}
+    .suggestion{padding:15px 17px;cursor:pointer;border-bottom:1px solid #f1f1f1;font-size:16px}
+    .suggestion:last-child{border-bottom:0}.suggestion:hover,.suggestion.active{background:#fbf0f2}
+    button{width:100%;margin-top:12px;padding:15px;border:0;border-radius:14px;background:var(--gray);color:white;font-size:16px;font-weight:600;cursor:pointer}
+    .result{margin-top:24px;padding:24px 14px;border-radius:18px;background:#fbf0f2;display:none}
+    .result .small{font-size:14px;margin-bottom:8px}.result .name{font-size:21px;font-weight:600;color:#45464a}.result .seat{font-family:Georgia,serif;font-size:38px;color:var(--pink-dark);margin-top:7px}
+    .error{margin-top:18px;color:#9a4e5b;font-size:14px;display:none}
+    .hint{font-size:13px;color:#999;margin-top:15px}
+    footer{font-size:12px;color:#aaa;margin-top:22px}
+    @media(max-width:420px){body{padding:16px}.card{padding:24px 16px}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="monogram">K & J</div>
+  <h1>Find Your Seat</h1>
+  <div class="date">October 24, 2026</div>
+  <section class="card">
+    <label for="guest">Search your name</label>
+    <div class="search-wrap">
+      <input id="guest" autocomplete="off" autocapitalize="words" placeholder="Start typing your name…" aria-autocomplete="list" aria-controls="suggestions">
+      <div id="suggestions" class="suggestions" role="listbox" hidden></div>
+    </div>
+    <button id="find" type="button">Find My Seat</button>
+    <div id="result" class="result" aria-live="polite">
+      <div class="small">Welcome!</div>
+      <div id="resultName" class="name"></div>
+      <div id="resultSeat" class="seat"></div>
+    </div>
+    <div id="error" class="error" aria-live="polite"></div>
+    <div class="hint">Select your name from the suggestions, or press Enter.</div>
+  </section>
+  <footer>Kalille & Jairein · 10.24.2026</footer>
+</main>
+
+<script>
+const API_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const input = document.getElementById("guest");
+const suggestions = document.getElementById("suggestions");
+const result = document.getElementById("result");
+const resultName = document.getElementById("resultName");
+const resultSeat = document.getElementById("resultSeat");
+const errorBox = document.getElementById("error");
+const findBtn = document.getElementById("find");
+let guests = [], selectedIndex = -1, selectedGuest = null;
+
+function norm(s){return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();}
+function score(name, q){
+  const n=norm(name), x=norm(q); if(!x)return 0;
+  if(n===x)return 1000;
+  if(n.startsWith(x))return 800-x.length;
+  const words=n.split(" "), qw=x.split(" ");
+  let hits=qw.filter(w=>words.some(v=>v.startsWith(w))).length;
+  return hits*100 - Math.max(0,n.indexOf(x)<0?20:0);
+}
+function renderSuggestions(){
+  const q=input.value.trim();
+  selectedIndex=-1; selectedGuest=null; suggestions.innerHTML="";
+  if(!q){suggestions.hidden=true;return}
+  const matches=guests.map(g=>({...g,_score:score(g.name,q)})).filter(g=>g._score>0)
+    .sort((a,b)=>b._score-a._score||a.name.localeCompare(b.name)).slice(0,7);
+  if(!matches.length){suggestions.hidden=true;return}
+  matches.forEach((g,i)=>{
+    const d=document.createElement("div"); d.className="suggestion"; d.setAttribute("role","option"); d.textContent=g.name;
+    d.onclick=()=>choose(g); suggestions.appendChild(d);
+  });
+  suggestions.hidden=false;
+}
+function choose(g){selectedGuest=g;input.value=g.name;suggestions.hidden=true;showResult(g);}
+function showResult(g){
+  resultName.textContent=g.name; resultSeat.textContent=g.seat;
+  result.style.display="block"; errorBox.style.display="none";
+}
+function find(){
+  const q=input.value.trim();
+  if(!q)return;
+  const g=selectedGuest || guests.map(x=>({...x,_score:score(x.name,q)})).sort((a,b)=>b._score-a._score)[0];
+  if(g && g._score>0){choose(g);return}
+  result.style.display="none"; errorBox.textContent="We couldn't find that name. Please check the spelling or choose a name from the list."; errorBox.style.display="block";
+}
+input.addEventListener("input",()=>{result.style.display="none";errorBox.style.display="none";renderSuggestions()});
+input.addEventListener("keydown",e=>{
+  const items=[...suggestions.querySelectorAll(".suggestion")];
+  if(e.key==="ArrowDown" && items.length){e.preventDefault();selectedIndex=Math.min(selectedIndex+1,items.length-1);items.forEach((x,i)=>x.classList.toggle("active",i===selectedIndex))}
+  else if(e.key==="ArrowUp" && items.length){e.preventDefault();selectedIndex=Math.max(selectedIndex-1,0);items.forEach((x,i)=>x.classList.toggle("active",i===selectedIndex))}
+  else if(e.key==="Enter"){e.preventDefault(); if(selectedIndex>=0 && items[selectedIndex])items[selectedIndex].click();else find()}
+  else if(e.key==="Escape")suggestions.hidden=true;
+});
+document.addEventListener("click",e=>{if(!e.target.closest(".search-wrap"))suggestions.hidden=true});
+findBtn.onclick=find;
+
+async function loadGuests(){
+  if(API_URL.includes("PASTE_")){errorBox.textContent="Setup needed: add your Google Apps Script Web App URL to index.html.";errorBox.style.display="block";return}
+  try{
+    const r=await fetch(API_URL,{cache:"no-store"});
+    if(!r.ok)throw new Error();
+    const data=await r.json();
+    if(!Array.isArray(data))throw new Error();
+    guests=data.filter(x=>x.name && x.seat).map(x=>({name:String(x.name),seat:String(x.seat)}));
+    if(!guests.length)throw new Error();
+  }catch(e){errorBox.textContent="We're having trouble loading the seating list. Please try again shortly.";errorBox.style.display="block"}
+}
+loadGuests();
+</script>
+</body>
+</html>
